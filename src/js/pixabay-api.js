@@ -1,23 +1,31 @@
 import axios from 'axios';
 import { API_KEY } from '../config.js';
 
-export function getImagesByQuery(query) {
+// Idealy would be a class static properties
+let page_number = 1;
+let user_query;
+
+export async function getImagesByQuery(query) {
+  if (user_query === encodeURIComponent(query)) page_number++;
+  else {
+    user_query = encodeURIComponent(query);
+    page_number = 1;
+  }
+
   var URL =
     'https://pixabay.com/api/?key=' +
     API_KEY +
-    '&q=' +
-    encodeURIComponent(query) +
+    `&q=${user_query}` +
     '&image_type=photo' +
     '&orientation=horizontal' +
-    '&safesearch=true';
+    '&safesearch=true' +
+    `&page=${page_number}` +
+    '&per_page=15';
 
-  return axios
-    .get(URL)
-    .then(response => {
-      return response.data.hits;
-    })
-    .catch(error => {
-      console.error(error);
-      return [];
-    });
+  try {
+    const response = await axios.get(URL);
+    return response.data.hits;
+  } catch {
+    return [];
+  }
 }

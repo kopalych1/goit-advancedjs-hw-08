@@ -6,6 +6,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 
 const imagesGallery = document.querySelector('ul.gallery');
 const loader = document.querySelector('div.loader');
+const loadMoreButton = document.querySelector('#load-more-button');
 
 const lightbox = new SimpleLightbox('.gallery a', {
   captionsData: 'alt',
@@ -58,6 +59,12 @@ export function showLoader() {
 export function hideLoader() {
   loader.style['display'] = 'none';
 }
+export function showLoadMoreButton() {
+  loadMoreButton.style['display'] = 'block';
+}
+export function hideLoadMoreButton() {
+  loadMoreButton.style['display'] = 'none';
+}
 
 export function createGallery(images) {
   const items = images.map(createGalleryItem).join('');
@@ -76,6 +83,13 @@ export function noImagesAlert() {
 export function emptyQueryAlert() {
   iziToast.error({
     title: 'Search string must not be empty',
+    position: 'topCenter',
+  });
+}
+
+export function noMoreImagesAlert() {
+  iziToast.error({
+    title: "We're sorry, but you've reached the end of search results.",
     position: 'topCenter',
   });
 }

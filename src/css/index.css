@@ -143,6 +143,38 @@ body {
   color: #6c757d;
 }
 
+/*  Load More button  */
+
+#load-more-button {
+  display: block;
+  margin: 0 auto 48px;
+  height: 44px;
+  padding: 0 36px;
+  font-size: 15px;
+  font-weight: 500;
+  color: #4a8af4;
+  background-color: #fff;
+  border: 1.5px solid #4a8af4;
+  border-radius: 6px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s,
+    transform 0.1s;
+}
+
+#load-more-button:hover {
+  background-color: #4a8af4;
+  color: #fff;
+}
+
+#load-more-button:active {
+  background-color: #2f74e8;
+  border-color: #2f74e8;
+  color: #fff;
+  transform: scale(0.98);
+}
+
 /*  Responsive  */
 
 @media (max-width: 900px) {

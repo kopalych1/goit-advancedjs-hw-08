@@ -6,14 +6,20 @@ import {
   noImagesAlert,
   hideLoader,
   showLoader,
+  hideLoadMoreButton,
+  showLoadMoreButton,
+  noMoreImagesAlert,
 } from './js/render-functions';
 
 const form = document.querySelector('form.form');
+const loadMoreButton = document.querySelector('#load-more-button');
 
-form.addEventListener('submit', event => {
+var user_query;
+
+form.addEventListener('submit', async event => {
   event.preventDefault();
 
-  var user_query = event.target.elements['search-text'].value.trim();
+  user_query = event.target.elements['search-text'].value.trim();
   if (user_query == '') {
     emptyQueryAlert();
     return;
@@ -23,19 +29,26 @@ form.addEventListener('submit', event => {
 
   showLoader();
   clearGallery();
-  getImagesByQuery(user_query)
-    .then(images => {
-      if (!images.length) {
-        noImagesAlert();
-      }
-      createGallery(images);
-    })
-    .catch(() => {
-      noImagesAlert();
-    })
-    .finally(() => {
-      hideLoader();
-    });
+
+  const images = await getImagesByQuery(user_query);
+
+  hideLoader();
+  if (!images.length) {
+    noImagesAlert();
+    return;
+  }
+  createGallery(images);
+  showLoadMoreButton();
 
   form.reset();
+});
+
+loadMoreButton.addEventListener('click', async event => {
+  const images = await getImagesByQuery(user_query);
+
+  createGallery(images);
+  if (!images.length) {
+    noMoreImagesAlert();
+    hideLoadMoreButton();
+  }
 });
