@@ -30,26 +30,39 @@ form.addEventListener('submit', async event => {
   console.debug('User query: ' + user_query);
 
   showLoader();
+  hideLoadMoreButton();
   clearGallery();
 
-  const images = await getImagesByQuery(user_query, page_number);
+  try {
+    const images = await getImagesByQuery(user_query, page_number);
 
-  hideLoader();
-  if (!images.length) {
+    if (!images.length) {
+      noImagesAlert();
+      return;
+    }
+    createGallery(images);
+    if (images.length == 15) showLoadMoreButton();
+  } catch (error) {
+    console.error(error);
     noImagesAlert();
-    return;
+  } finally {
+    hideLoader();
+    form.reset();
   }
-  createGallery(images);
-  if (images.length == 15) showLoadMoreButton();
-
-  form.reset();
 });
 
 loadMoreButton.addEventListener('click', async event => {
-  const images = await getImagesByQuery(user_query, ++page_number);
+  try {
+    const images = await getImagesByQuery(user_query, ++page_number);
 
-  createGallery(images);
-  if (!images.length) {
+    if (!images.length) {
+      noMoreImagesAlert();
+      hideLoadMoreButton();
+      return;
+    }
+    createGallery(images);
+  } catch (error) {
+    console.error(error);
     noMoreImagesAlert();
     hideLoadMoreButton();
   }
